@@ -1,14 +1,12 @@
-//your JS code here. If required.
-// Keep track of currently playing audio
+const buttonsDiv = document.getElementById("buttons");
 let currentAudio = null;
 
-// Get all buttons with class "btn"
-const buttons = document.querySelectorAll(".btn");
-buttons.forEach(button => {
-  button.addEventListener("click", () => {
-    const soundFile = button.getAttribute("data-sound");
-    
-    // Stop previous audio if any
+// Play sound when a sound button is clicked
+buttonsDiv.addEventListener("click", (e) => {
+  if (e.target.classList.contains("btn")) {
+    const soundFile = e.target.getAttribute("data-sound");
+
+    // Stop previous audio if playing
     if (currentAudio) {
       currentAudio.pause();
       currentAudio.currentTime = 0;
@@ -16,16 +14,15 @@ buttons.forEach(button => {
 
     // Play new audio
     currentAudio = new Audio(`sounds/${soundFile}`);
-    currentAudio.play();
-  });
-});
+    currentAudio.play().catch(err => console.error("Audio play failed:", err));
+  }
 
-// Stop button functionality
-const stopBtn = document.querySelector(".stop");
-stopBtn.addEventListener("click", () => {
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
-    currentAudio = null;
+  // Stop button functionality
+  if (e.target.classList.contains("stop")) {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      currentAudio = null;
+    }
   }
 });
