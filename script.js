@@ -1,28 +1,33 @@
+const sounds = ["clap", "hi-hat", "kick", "openhat", "snare", "tink"];
+
 const buttonsDiv = document.getElementById("buttons");
-let currentAudio = null;
 
-// Play sound when a sound button is clicked
-buttonsDiv.addEventListener("click", (e) => {
-  if (e.target.classList.contains("btn")) {
-    const soundFile = e.target.getAttribute("data-sound");
+sounds.forEach((sound) => {
+  const btn = document.createElement("button");
+  btn.classList.add("btn");
+  btn.innerText = sound;
 
-    // Stop previous audio if playing
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
-    }
+  btn.addEventListener("click", () => {
+    stopSounds();
+    const audio = new Audio(`./sounds/${sound}.mp3`);
+    audio.play();
+  });
 
-    // Play new audio
-    currentAudio = new Audio(`sounds/${soundFile}`);
-    currentAudio.play().catch(err => console.error("Audio play failed:", err));
-  }
-
-  // Stop button functionality
-  if (e.target.classList.contains("stop")) {
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
-      currentAudio = null;
-    }
-  }
+  buttonsDiv.appendChild(btn);
 });
+
+// Create stop button
+const stopBtn = document.createElement("button");
+stopBtn.classList.add("stop");
+stopBtn.innerText = "Stop";
+stopBtn.addEventListener("click", stopSounds);
+buttonsDiv.appendChild(stopBtn);
+
+// Stop all sounds
+function stopSounds() {
+  const audios = document.querySelectorAll("audio");
+  audios.forEach((audio) => {
+    audio.pause();
+    audio.currentTime = 0;
+  });
+}
